@@ -15,12 +15,12 @@ const Task = (props) => {
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="table_align">
-                            {props.content}
+                        <td className="table_align" style={{ textDecoration: props.content.completed ? "line-through" : "" }}>
+                            {props.content.title}
                         </td>
                         <td>
                             <Button variant="dark" className="button_align" onClick={() => { props.onDelete(props.id) }}>Delete</Button>
-                            <Button variant="dark" className="button_align" onClick={() => {props.onCompleted(props.id)}}>Completed</Button>
+    <Button variant="dark" className="button_align" onClick={() => {props.onCompleted(props.id)}}>{props.content.completed? 'In Progress': 'Complete'}</Button>
                         </td>
                     </tr>
                 </tbody>

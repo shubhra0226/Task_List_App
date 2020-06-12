@@ -8,9 +8,8 @@ import Homepage from './components/Homepage/Homepage.jsx';
 
 
 const App = () => {
-  const initialTask = () => window.localStorage.getItem('tasks');
-  const [tasks, setTasks] = useState([initialTask]);
-  const [complete, setCompleted] = useState([]);
+  const initialTask = JSON.parse(window.localStorage.getItem('tasks'));
+  const [tasks, setTasks] = useState(initialTask ? initialTask : []);
 
   const handleDelete = (index) => {
     const newArr = [...tasks];
@@ -18,26 +17,33 @@ const App = () => {
     setTasks(newArr);
   }
 
-  const handleSubmit = task => {
-    setTasks([...tasks, task]);
+  const handleComplete = (index) => {
+    const taskToComplete = tasks[index];
+    taskToComplete.completed = !taskToComplete.completed;
+    const newArr = [...tasks];
+    newArr.splice(index, 1, taskToComplete);
+    setTasks(newArr);
   }
 
-  const completedTask = (event) => {
-    const selectedTask = event.currentTarget;
-    this.updateTaskStatus(selectedTask);
-  };
+  const handleSubmit = task => {
+    const newTask = {
+      title: task,
+      completed: false
+    }
+    setTasks([...tasks, newTask]);
+  }
 
   useEffect(() => {
-    window.localStorage.setItem('tasks', tasks);
+    window.localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
-  
+
   return (
     <Alert>
       <h1 className="App">Task List Application</h1>
       <Homepage />
       <Header tasktodo={tasks.length} />
       <FormSubmit onFormSubmit={handleSubmit} />
-      <TaskList tasks={tasks} onDelete={handleDelete} onCompleted={completedTask} />
+      <TaskList tasks={tasks} onDelete={handleDelete} onCompleted={handleComplete} />
     </Alert>
   );
 }
